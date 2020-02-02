@@ -17,5 +17,8 @@ public class Presentation {
     @GeneratedValue
     private Long id;
 
-    private String url;
+    private String name;
+
+    private String tags;
+
 }

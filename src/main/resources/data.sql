@@ -1,1 +1,1 @@
-insert into presentation values(1, 'test');
+insert into presentation values(1, 'test','cool,it');
