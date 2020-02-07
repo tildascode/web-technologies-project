@@ -1,5 +1,7 @@
 package com.webproject.models;
 
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,7 +24,11 @@ public class Slide {
 
     private File image;
 
-    private QRCode code;
+    //private QRCode code;
 
     int index;
+
+    @ManyToOne
+    @JoinColumn(name = "presentation_id", nullable = false)
+    private Presentation presentation;
 }

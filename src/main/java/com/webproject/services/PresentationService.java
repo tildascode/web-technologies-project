@@ -15,4 +15,9 @@ public class PresentationService {
     public List<Presentation> findAll() {
         return presentationRepository.findAll();
     }
+
+    public List<Presentation> findAll(String userId) {
+        //all for user id
+        return presentationRepository.findAll();
+    }
 }
