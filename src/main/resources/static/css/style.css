@@ -693,15 +693,15 @@ h3 {
 
 /* line 75, ../../Arafath/CL/CL August/204. Blog/204. Blog- HTML/scss/_header.scss */
 .header-area .main-header-area .main-menu ul li a {
-    color: #fff;
-    font-size: 16px;
-    text-transform: capitalize;
-    font-weight: 400;
-    display: inline-block;
-    padding: 22px 23px 22px 23px;
-    font-family: "Roboto", sans-serif;
-    position: relative;
-    text-transform: capitalize;
+  color: #fff;
+  font-size: 20px;
+  text-transform: capitalize;
+  font-weight: 400;
+  display: inline-block;
+  padding: 22px 23px 22px 23px;
+  font-family: "Roboto", sans-serif;
+  position: relative;
+  text-transform: capitalize;
 }
 
 @media (min-width: 992px) and (max-width: 1200px) {
