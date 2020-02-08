@@ -22,7 +22,7 @@ public class PresentationController {
     public String getPresentationsForUser(Model model, @PathVariable("userID") String userID,
                                           @RequestParam(name = "page", defaultValue = "0") int page) {
         addAttributes(presentationService.findAllForUser(userID, page), model);
-        return "presentations";
+        return "profile";
     }
 
     @GetMapping
@@ -31,7 +31,7 @@ public class PresentationController {
         addAttributes(presentationService.findAll(page, tag), model);
         model.addAttribute("tags", presentationService.getAllDistinctTags());
         model.addAttribute("selectedTag", tag);
-        return "presentations";
+        return "all-presentations";
     }
 
     private void addAttributes(Page<Presentation> presentations, Model model) {
