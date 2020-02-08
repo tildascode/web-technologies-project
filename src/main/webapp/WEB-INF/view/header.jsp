@@ -1,3 +1,4 @@
+<%@ page contentType="text/html;charset=UTF-8" %>
 <!-- header-start -->
 <header>
     <div class="header-area ">
@@ -7,22 +8,22 @@
                     <div class="col-xl-4 col-md-4 d-none d-md-block">
                         <div class="header_links ">
                             <ul>
-                                <li><a href="#"> <i class="fa fa-facebook"></i> </a></li>
-                                <li><a class="twiter" href="#"> <i class="fa fa-twitter"></i> </a></li>
-                                <li><a class="insta" href="#"> <i class="fa fa-instagram"></i> </a></li>
+                                <li></li>
+                                <li></li>
+                                <li></li>
                             </ul>
                         </div>
                     </div>
                     <div class="col-xl-4 col-md-4">
                         <div class="logo">
                             <a href="index.html">
-                                <img src="/img/logo.png" alt="">
+                                <img src="img/logo.png" width="500px" alt="">
                             </a>
                         </div>
                     </div>
                     <div class="col-xl-4 col-md-4 d-none d-md-block">
                         <div class="login_resiter">
-                            <p><a href="#"><i class="flaticon-user"></i>login</a> | <a href="#">Resister</a></p>
+                            <p><a href="#"><i class="flaticon-user"></i>Профил</a></p>
                         </div>
                     </div>
                 </div>
@@ -35,9 +36,9 @@
                         <div class="main-menu  d-none d-lg-block">
                             <nav>
                                 <ul id="navigation">
-                                    <li><a href="/">Home</a></li>
-                                    <li><a href="/presentations">Presentations</a></li>
-                                    <li><a href="/presentations/userID">Profile</a></li>
+                                    <li><a href="/">Качи Презентация</a></li>
+                                    <li><a href="/presentations">Всички Презентации</a></li>
+                                    <li><a href="/presentations/userID">Мои презентации</a></li>
                                 </ul>
                             </nav>
                         </div>
