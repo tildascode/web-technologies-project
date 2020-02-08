@@ -16,7 +16,7 @@
                     <div class="col-xl-4 col-md-4">
                         <div class="logo">
                             <a href="index.html">
-                                <img src="img/logo.png" alt="">
+                                <img src="/img/logo.png" alt="">
                             </a>
                         </div>
                     </div>

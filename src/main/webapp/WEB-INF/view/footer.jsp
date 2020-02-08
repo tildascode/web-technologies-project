@@ -7,7 +7,7 @@
                     <div class="footer_info text-center">
                         <div class="footer_logo text-center">
                             <a href="#">
-                                <img src="img/footer-logo.png" alt="">
+                                <img src="/img/footer-logo.png" alt="">
                             </a>
                         </div>
                         <p class="footer_text">
