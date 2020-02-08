@@ -39,8 +39,10 @@
                                     <li><a href="/">Качи Презентации</a></li>
                                     <li><a href="/presentations">Всички Презентации</a></li>
                                     <li><a href="/presentations/userID">Профил</a></li>
+                                    <li><a href="#" id="export-all">Изтегли всички</a></li>
                                 </ul>
                             </nav>
+                            <a id="export-zip" href="/presentations.zip" download="presentations">Test</a>
                         </div>
                     </div>
                 </div>

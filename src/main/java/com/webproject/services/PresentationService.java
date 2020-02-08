@@ -2,14 +2,21 @@ package com.webproject.services;
 
 import com.webproject.models.Presentation;
 import com.webproject.repositories.PresentationRepository;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.zeroturnaround.zip.ZipUtil;
 
 @Service
 public class PresentationService {
@@ -47,4 +54,8 @@ public class PresentationService {
         return tags;
     }
 
+    public void exportAll() {
+        ZipUtil
+            .pack(new File("src/main/resources/static/files"), new File("src/main/resources/static/presentations.zip"));
+    }
 }
