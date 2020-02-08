@@ -3054,7 +3054,7 @@ h6 {
 .single-input {
     display: block;
     width: 100%;
-    line-height: 40px;
+    line-height: 60px;
     border: none;
     outline: none;
     background: #f9f9ff;
@@ -3112,7 +3112,7 @@ h6 {
 .single-input-primary {
     display: block;
     width: 100%;
-    line-height: 40px;
+    line-height: 60px;
     border: 1px solid transparent;
     outline: none;
     background: #f9f9ff;
