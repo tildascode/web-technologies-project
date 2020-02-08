@@ -31,23 +31,24 @@
 <div class="most_recent_blog">
     <div class="container">
         <div class="row">
-            <c:forEach items="${presentations}" var="presentation"></c:forEach>
             <div class="col-xl-8 col-md-8">
                 <div class="section_title mb-33">
                     <h3>Most Recent</h3>
                 </div>
                 <div class="row">
-                    <div class="single_blog">
-                        <div class="blog_thumb">
-                            <a href="#">
-                                <img src="/img/most_recent/2.jpg" alt="">
-                            </a>
+                    <c:forEach items="${presentations}" var="presentation">
+                        <div class="single_blog">
+                            <div class="blog_thumb">
+                                <a href="#">
+                                    <img src="/img/most_recent/2.jpg" alt="">
+                                </a>
+                            </div>
+                            <div class="blog_meta">
+                                <p><a href="#">${presentation.name}</a></p>
+                                <h3><a href="#">${presentation.name}</a></h3>
+                            </div>
                         </div>
-                        <div class="blog_meta">
-                            <p><a href="#">${presentation.name}</a></p>
-                            <h3><a href="#">${presentation.name}</a></h3>
-                        </div>
-                    </div>
+                    </c:forEach>
                 </div>
             </div>
             <div class="col-xl-4 col-md-4">
@@ -57,7 +58,7 @@
                 <div class="tags">
                     <ul>
                         <c:forEach items="${tags}" var="tag">
-                            <li><a href="/presentations/${tag}">tag</a></li>
+                            <li><a href="/presentations?tag=${tag}">${tag}</a></li>
                         </c:forEach>
                     </ul>
                 </div>
