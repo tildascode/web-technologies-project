@@ -2,8 +2,9 @@ package com.webproject.models;
 
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import net.glxn.qrgen.javase.QRCode;
 
 import javax.persistence.Entity;
@@ -27,9 +28,7 @@ public class Slide {
 
     int index;
 
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
     @ManyToOne
     @JoinColumn(name = "presentation_id", nullable = false)
-    Presentation presentation;
+    private Presentation presentation;
 }
