@@ -36,9 +36,9 @@
                         <div class="main-menu  d-none d-lg-block">
                             <nav>
                                 <ul id="navigation">
-                                    <li><a href="/">Качи Презентация</a></li>
+                                    <li><a href="/">Качи Презентации</a></li>
                                     <li><a href="/presentations">Всички Презентации</a></li>
-                                    <li><a href="/presentations/userID">Мои презентации</a></li>
+                                    <li><a href="/presentations/userID">Профил</a></li>
                                 </ul>
                             </nav>
                         </div>
