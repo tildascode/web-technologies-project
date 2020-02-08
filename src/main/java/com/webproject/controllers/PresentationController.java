@@ -2,7 +2,6 @@ package com.webproject.controllers;
 
 import com.webproject.models.Presentation;
 import com.webproject.services.PresentationService;
-import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -12,6 +11,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import com.webproject.form.PresentationForm;
+
+import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/presentations")
@@ -47,6 +53,30 @@ public class PresentationController {
         model.addAttribute("presentations", presentations.getContent());
         model.addAttribute("pages", presentations.getTotalPages());
         model.addAttribute("pageNumber", presentations.getNumber());
+    }
+
+    @PostMapping("/upload")
+    public String handleFileUpload(Model model, @Valid PresentationForm form, BindingResult bindingResult,
+                                   RedirectAttributes redirectAttributes) {
+        if (bindingResult.hasErrors()) {
+            StringBuffer message = new StringBuffer();
+            for (FieldError fe : bindingResult.getFieldErrors()) {
+                message.append(fe.getDefaultMessage() + " \n");
+            }
+            if(form.getZipFile().getName().isEmpty()) {
+                message.append("Невалиден файл\n");
+            }
+            model.addAttribute("message", message.toString());
+            return "upload";
+        }
+        redirectAttributes.addFlashAttribute("message",
+                "You successfully uploaded " + form.getZipFile().getOriginalFilename() + "!");
+        return "redirect:/presentations";
+    }
+
+    @GetMapping("/upload")
+    public String getUploadPage(PresentationForm form) {
+        return "upload";
     }
 
 }

@@ -16,7 +16,7 @@
                     </div>
                     <div class="col-xl-4 col-md-4">
                         <div class="logo">
-                            <a href="index.html">
+                            <a href="/index/">
                                 <img src="/img/logo.png" width="500px" alt="">
                             </a>
                         </div>
@@ -36,7 +36,7 @@
                         <div class="main-menu  d-none d-lg-block">
                             <nav>
                                 <ul id="navigation">
-                                    <li><a href="/">Качи Презентации</a></li>
+                                    <li><a href="/presentations/upload">Качи Презентации</a></li>
                                     <li><a href="/presentations">Всички Презентации</a></li>
                                     <li><a href="/presentations/userID">Профил</a></li>
                                     <li><a href="#" id="export-all">Изтегли всички</a></li>
