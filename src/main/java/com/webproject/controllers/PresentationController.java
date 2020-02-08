@@ -2,8 +2,8 @@ package com.webproject.controllers;
 
 import com.webproject.models.Presentation;
 import com.webproject.services.PresentationService;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,18 +20,24 @@ public class PresentationController {
 
     @GetMapping(value = "/{userID}")
     public String getPresentationsForUser(Model model, @PathVariable("userID") String userID,
-                                          @RequestParam("pageIndex") int pageIndex) {
-        model.addAttribute("presentations", presentationService.findAllForUser(userID));
+                                          @RequestParam(name = "page", defaultValue = "0") int page) {
+        addAttributes(presentationService.findAllForUser(userID, page), model);
         return "presentations";
     }
 
     @GetMapping
-    public String getAllPresentations(Model model, @RequestParam(name = "pageIndex", defaultValue = "0") int pageIndex,
+    public String getAllPresentations(Model model, @RequestParam(name = "page", defaultValue = "0") int page,
                                       @RequestParam(name = "tag", required = false) String tag) {
-        List<Presentation> presentations = presentationService.findAll(pageIndex, tag);
-        model.addAttribute("presentations", presentations);
+        addAttributes(presentationService.findAll(page, tag), model);
         model.addAttribute("tags", presentationService.getAllDistinctTags());
+        model.addAttribute("selectedTag", tag);
         return "presentations";
+    }
+
+    private void addAttributes(Page<Presentation> presentations, Model model) {
+        model.addAttribute("presentations", presentations.getContent());
+        model.addAttribute("pages", presentations.getTotalPages());
+        model.addAttribute("pageNumber", presentations.getNumber());
     }
 
 }

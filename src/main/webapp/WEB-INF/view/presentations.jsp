@@ -35,6 +35,7 @@
                 <div class="section_title mb-33">
                     <h3>Most Recent</h3>
                 </div>
+                <%@include file='paging.jsp' %>
                 <div class="row">
                     <c:forEach items="${presentations}" var="presentation">
                         <div class="single_blog">
@@ -51,19 +52,24 @@
                     </c:forEach>
                 </div>
             </div>
-            <div class="col-xl-4 col-md-4">
-                <div class="section_title mb-33">
-                    <h3>Tags</h3>
+            <c:if test="${not empty tags}">
+                <div class="col-xl-4 col-md-4">
+                    <div class="section_title mb-33">
+                        <h3>Tags</h3>
+                    </div>
+                    <div class="tags">
+                        <ul>
+                            <c:forEach items="${tags}" var="tag">
+                                <li <c:if test="${tag eq selectedTag}">class="active"</c:if>>
+                                    <a href="?tag=${tag}">${tag}</a>
+                                </li>
+                            </c:forEach>
+                        </ul>
+                    </div>
                 </div>
-                <div class="tags">
-                    <ul>
-                        <c:forEach items="${tags}" var="tag">
-                            <li><a href="/presentations?tag=${tag}">${tag}</a></li>
-                        </c:forEach>
-                    </ul>
-                </div>
-            </div>
+            </c:if>
         </div>
+        <%@include file='paging.jsp' %>
     </div>
 </div>
 

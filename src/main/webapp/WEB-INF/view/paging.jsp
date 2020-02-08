@@ -1,0 +1,5 @@
+<div class="d-block">
+    <c:forEach begin="0" end="${pages-1}" var="page">
+        <a <c:if test="${pageNumber==page}"> style="color:#fd7e14" </c:if>href="?page=${page}&tag=${selectedTag}">${page+1}</a>
+    </c:forEach>
+</div>

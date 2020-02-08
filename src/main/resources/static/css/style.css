@@ -1568,6 +1568,11 @@ h3 {
     margin-bottom: 18px;
 }
 
+.most_recent_blog .tags ul .active {
+    background-color: #fd7e14;
+    color:#ededed;
+}
+
 /* line 149, ../../Arafath/CL/CL August/204. Blog/204. Blog- HTML/scss/_recent_blog.scss */
 .most_recent_blog .tags ul li a {
     padding: 11px 25px;
