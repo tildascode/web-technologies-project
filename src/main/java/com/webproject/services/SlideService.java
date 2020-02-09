@@ -19,7 +19,7 @@ public class SlideService {
         List<Slide> slides = slideRepository.findAll();
         List<Slide> result = new ArrayList<Slide>();
         for (Slide slide : slides) {
-			if(slide.getPresentation().getId() == presentationId) {
+			if(slide.getPresentation().getId() == (presentationId)) {
 				result.add(slide);
 			}
 		}

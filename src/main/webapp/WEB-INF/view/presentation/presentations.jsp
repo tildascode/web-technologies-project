@@ -15,8 +15,8 @@
                     </a>
                 </div>
                 <div class="blog_meta">
-                    <p><a href="#">${presentation.name}</a></p>
-                    <h3><a href="#">${presentation.name}</a></h3>
+                    <p><a href="slides?presentationID=${presentation.id}">${presentation.name}</a></p>
+                    <h3><a href="slides?presentationID=${presentation.id}">${presentation.name}</a></h3>
                 </div>
             </div>
         </c:forEach>
