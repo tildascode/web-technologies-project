@@ -32,4 +32,5 @@ public class Slide {
     @ManyToOne
     @JoinColumn(name = "presentation_id", nullable = false)
     Presentation presentation;
+    
 }
