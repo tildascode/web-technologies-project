@@ -18,19 +18,20 @@ public class UserController {
 	@Autowired private UserService userService;
 
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
-	public ModelAndView showLogin() {
+	public ModelAndView showLogin(HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView mav = new ModelAndView("login");
 		mav.addObject("user", new User());
 		return mav;
 	}
 
-	@RequestMapping(value = "/loginProcess", method = RequestMethod.POST)
-	public ModelAndView loginProcess(@ModelAttribute("user") User user) {
+	@RequestMapping(value = "/home", method = RequestMethod.POST)
+	public ModelAndView loginProcess(HttpServletRequest request, HttpServletResponse response,
+			@ModelAttribute("user") User user) {
 		ModelAndView mav = null;
 		User u = userService.validateUser(user);
 		if (null != u) {
-			mav = new ModelAndView("welcome");
-			mav.addObject("userName", u.getUsername());
+			mav = new ModelAndView("home");
+			mav.addObject("userName", u.getUserName());
 		} else {
 			mav = new ModelAndView("login");
 			mav.addObject("message", "Username or Password is wrong!!");

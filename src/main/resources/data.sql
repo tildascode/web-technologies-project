@@ -1,6 +1,6 @@
-insert into user values(1, 'snezhi','123');
-insert into user values(2, 'tedi','123');
-insert into user values(3, 'milen','123');
+insert into user values(1,'123', 'snezhi');
+insert into user values(2, '123', 'tedi');
+insert into user values(3,'123', 'milen');
 
 insert into presentation values(1, 'Nature','art,cool', 1);
 insert into presentation values(2, 'Technologies','cool,it', 2);

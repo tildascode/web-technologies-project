@@ -20,7 +20,7 @@ public class UserService {
 	public User validateUser(User u) {
 		List<User> users = findAll();
 		for (User user : users) {
-			if(user.getUsername().equalsIgnoreCase(u.getUsername()) && 
+			if(user.getUserName().equalsIgnoreCase(u.getUserName()) && 
 					user.getPassword().equals(u.getPassword())) {
 				return user;
 			}

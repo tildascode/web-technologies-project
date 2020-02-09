@@ -29,7 +29,4 @@ public class User {
 	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
 	List<Presentation> presentations;
 
-	public String getUsername() {
-		return userName;
-	}
 }
