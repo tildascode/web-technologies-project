@@ -14,10 +14,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.webproject.form.PresentationForm;
 
 import javax.validation.Valid;
+import java.io.File;
+import java.io.IOException;
 
 @Controller
 @RequestMapping("/presentations")
@@ -56,23 +57,28 @@ public class PresentationController {
     }
 
     @PostMapping("/upload")
-    public String handleFileUpload(Model model, @Valid PresentationForm form, BindingResult bindingResult,
-                                   RedirectAttributes redirectAttributes) {
+    public String handleFileUpload(Model model, @Valid PresentationForm form, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             StringBuffer message = new StringBuffer();
             for (FieldError fe : bindingResult.getFieldErrors()) {
                 message.append(fe.getDefaultMessage() + " \n");
             }
-            if(form.getZipFile().getName().isEmpty()) {
+            if (form.getZipFile().getName().isEmpty()) {
                 message.append("Невалиден файл\n");
             }
             model.addAttribute("message", message.toString());
+
             return "upload";
         }
-        redirectAttributes.addFlashAttribute("message",
-                "You successfully uploaded " + form.getZipFile().getOriginalFilename() + "!");
+        try {
+            File destination = presentationService.decompressZipToDestination(form.getZipFile());
+        } catch (IOException e) {
+            model.addAttribute("message", "Неуспешно разахивиран файл; Сигурни ли сте, че сте покрили горните критерии?");
+        }
+
         return "redirect:/presentations";
     }
+
 
     @GetMapping("/upload")
     public String getUploadPage(PresentationForm form) {
