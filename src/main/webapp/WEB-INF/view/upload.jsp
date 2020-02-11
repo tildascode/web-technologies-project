@@ -33,7 +33,7 @@
     <div class="container box_1170">
 
         <div class="section-top-border">
-            <h3 class="mb-30">Форма за качване на предентации</h3>
+            <h3 class="mb-30">Форма за качване на презентации</h3>
             <div class="row">
                 <div class="col-lg-12">
                     <blockquote class="generic-blockquote">
