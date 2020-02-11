@@ -11,13 +11,11 @@ import java.nio.file.Files;
 @Service
 public class UtilService {
 
-    public byte[] createQR(Long presentationId) throws IOException {
-        File qrCode = QRCode.from("p" + presentationId).to(ImageType.PNG).withSize(250, 250).file();
-        return Files.readAllBytes(qrCode.toPath());
+    public File createQR(Long presentationId) throws IOException {
+        return QRCode.from("p" + presentationId).to(ImageType.PNG).withSize(250, 250).file();
     }
 
-    public byte[] createQR(Long presentationId, Long slideId) throws IOException {
-        File qrCode = QRCode.from("p" + presentationId + "s" + slideId).to(ImageType.PNG).withSize(250, 250).file();
-        return Files.readAllBytes(qrCode.toPath());
+    public File createQR(Long presentationId, Long slideId) throws IOException {
+        return QRCode.from("p" + presentationId + "s" + slideId).to(ImageType.PNG).withSize(250, 250).file();
     }
 }

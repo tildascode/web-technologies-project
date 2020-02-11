@@ -1,6 +1,8 @@
 package com.webproject.services;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,10 +43,16 @@ public class SlideService {
     public void createQRCodeForSlidesOf(Presentation presentation) throws IOException {
         Long id = presentation.getId();
         List<Slide> slides = findAllSlidesForPresentation(id);
-
+        File qrCodeFolder = new File("src/main/resources/static/img/presentations" + File.separator + presentation.getName(), "qrCodes");
+        if (!qrCodeFolder.exists()) {
+            Files.createDirectory(qrCodeFolder.toPath());
+        }
         for (Slide s : slides) {
-            byte[] qrCode = utils.createQR(id, s.getId());
-            s.setQr_code(qrCode);
+            File file = utils.createQR(id, s.getId());
+            File qrCode = new File(qrCodeFolder + File.separator + file.getName());
+            if (!qrCode.exists()) {
+                Files.createDirectory(qrCode.toPath());
+            }
             slideRepository.save(s);
         }
     }

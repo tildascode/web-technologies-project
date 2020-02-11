@@ -9,6 +9,7 @@ import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.net.URL;
 import java.nio.file.Files;
 import java.util.*;
 import java.util.List;
@@ -21,6 +22,7 @@ import com.webproject.repositories.UserRepository;
 import org.apache.poi.xslf.usermodel.XMLSlideShow;
 import org.apache.poi.xslf.usermodel.XSLFSlide;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -49,6 +51,10 @@ public class PresentationService {
         }
     }
 
+    public Optional<Presentation> getPresentationById(Long id) { 	
+    	return presentationRepository.findById(id);
+    }
+    
     public Page<Presentation> findAll(int pageIndex) {
         return presentationRepository.findAll(PageRequest.of(pageIndex, RESULTS_PER_PAGE));
     }
@@ -125,28 +131,33 @@ public class PresentationService {
                         .tags(input.getTags())
                         .user(userRepository.getOne(userId)).build();
                 List<Slide> slidesToSave = new ArrayList<>();
-
+                //create directory for presentation with name
+                File presentationFolder = new File("src/main/resources/static/img/presentations",p.getName());
+                if (!presentationFolder.exists()) {
+                    Files.createDirectory(presentationFolder.toPath());
+                }
+                //create slide directory
                 String destSlides = "slides";
-                File outFile = new File(destSlides); //dest here is the name of the folder to save all the slides
-                if (!outFile.exists()) {
-                    Files.createDirectory(outFile.toPath());
+                File slidesDir = new File(presentationFolder,destSlides); //dest here is the name of the folder to save all the slides
+                if (!slidesDir.exists()) {
+                    Files.createDirectory(slidesDir.toPath());
                 }
-                String destImages = "slides" + File.separator + input.getZipFile().getOriginalFilename();
-                outFile = new File(destImages);
-                System.out.println("Destination is " + destSlides);
-                if (!outFile.exists()) {
-                    Files.createDirectory(outFile.toPath());
-                }
+                //String destImages = "slides" + File.separator + input.getZipFile().getOriginalFilename();
+                //File outFile = new File(destImages);
+                //System.out.println("Destination is " + destSlides);
+                //if (!outFile.exists()) {
+                //    Files.createDirectory(outFile.toPath());
+                //}
                 FileInputStream inputStream = new FileInputStream(file);
                 XMLSlideShow ppt = new XMLSlideShow(inputStream);
                 //getting the dimensions and size of the slide
                 Dimension pageSize = ppt.getPageSize();
                 List<XSLFSlide> slide = ppt.getSlides();
                 //for all slides create images
-                createPngFromSlides(slide, new BufferedImage(pageSize.width, pageSize.height, BufferedImage.TYPE_INT_RGB), pageSize, outFile);
-                if (outFile.exists() && outFile.isDirectory()) {
+                createPngFromSlides(slide, new BufferedImage(pageSize.width, pageSize.height, BufferedImage.TYPE_INT_RGB), pageSize, slidesDir);
+                if (slidesDir.exists() && slidesDir.isDirectory()) {
                     final FilenameFilter IMAGE_FILTER = (dir, name) -> name.endsWith(".png"); //make sure only png are valid
-                    for (final File f : outFile.listFiles(IMAGE_FILTER)) {
+                    for (final File f : slidesDir.listFiles(IMAGE_FILTER)) {        	
                         byte[] slideBytes = Files.readAllBytes(f.toPath());
                         int slideStringIndex = f.getName().lastIndexOf("slide") + 5;
                         int slideIndex = Integer.valueOf(f.getName().substring(slideStringIndex, f.getName().indexOf(".png")));
@@ -181,4 +192,20 @@ public class PresentationService {
             out.close();
         }
     }
+    
+	public File uploadPresentation(MultipartFile zipFile) throws IOException {
+        byte[] buffer = new byte[1024];
+		InputStream fis = zipFile.getInputStream();
+		File destDir = createTempDirectory();
+		File newFile = new File(destDir, zipFile.getOriginalFilename());
+		FileOutputStream fos = new FileOutputStream(newFile);
+		int len;
+		while ((len = fis.read(buffer)) > 0) {
+			fos.write(buffer, 0, len);
+		}
+		fos.close();
+		fis.close();
+		return newFile.getParentFile();
+	}
+
 }

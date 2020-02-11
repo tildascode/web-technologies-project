@@ -37,8 +37,8 @@
             <div class="row">
                 <div class="col-lg-12">
                     <blockquote class="generic-blockquote">
-                        Презентациите трябва да са във формат .ppt, .pptx. Изберете презентациите за качване
-                        и ги архивирайте в .zip файл, който да качите, чрез формата.
+                        Презентациите трябва да са във формат .ppt, .pptx. Може да качите една презентация или да изберете няколко презентации
+                        и да ги архивирате в .zip файл, който да качите, чрез формата.
                     </blockquote>
                 </div>
             </div>
@@ -60,7 +60,7 @@
                     <form action="/presentations/upload" th:object="${form}" method="POST" enctype="multipart/form-data"
                           name="form">
                         <div class="mt-10">
-                            <input type="text" name="name" placeholder="Име на zip файла"
+                            <input type="text" name="name" placeholder="Име на файла"
                                    onfocus="this.placeholder = ''" onblur="this.placeholder = 'Име'" required
                                    class="single-input">
                         </div>
