@@ -15,13 +15,15 @@ import java.io.File;
 public class Slide {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "image", unique = false, length = 100000)
+    @Column(name = "image", unique = false, length = 100000000)
     private byte[] image;
 
-    //private QRCode code;
+    @Column(name = "qr_code", unique = false, length = 100000000)
+    private byte[] qr_code;
 
     int index;
 
@@ -30,5 +32,5 @@ public class Slide {
     @ManyToOne
     @JoinColumn(name = "presentation_id", nullable = false)
     Presentation presentation;
-    
+
 }

@@ -16,6 +16,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipInputStream;
 
+import com.webproject.repositories.SlideRepository;
 import com.webproject.repositories.UserRepository;
 import org.apache.poi.xslf.usermodel.XMLSlideShow;
 import org.apache.poi.xslf.usermodel.XSLFSlide;
@@ -36,6 +37,9 @@ public class PresentationService {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    SlideRepository slideRepository;
 
     public Page<Presentation> findAll(int pageIndex, String tag) {
         if (tag != null) {
@@ -150,6 +154,7 @@ public class PresentationService {
                     }
                     p.setSlides(slidesToSave);
                     p = presentationRepository.save(p);
+                    slideRepository.saveAll(slidesToSave);
                     presentationsToSave.add(p);
                 }
             }

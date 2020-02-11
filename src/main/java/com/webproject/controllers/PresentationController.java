@@ -2,6 +2,7 @@ package com.webproject.controllers;
 
 import com.webproject.models.Presentation;
 import com.webproject.services.PresentationService;
+import com.webproject.services.SlideService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -19,6 +20,8 @@ import com.webproject.form.PresentationForm;
 import javax.validation.Valid;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @RequestMapping("/presentations")
@@ -26,6 +29,9 @@ public class PresentationController {
 
     @Autowired
     private PresentationService presentationService;
+
+    @Autowired
+    private SlideService slideService;
 
     @GetMapping(value = "/{userID}")
     public String getPresentationsForUser(Model model, @PathVariable("userID") String userID,
@@ -79,8 +85,9 @@ public class PresentationController {
             return "upload";
         }
         //2nd for each file create presentation
+        List<Presentation> presentations = new ArrayList<>();
         try {
-            presentationService.createPresentationsFrom(destination, form, 1L);
+            presentations = presentationService.createPresentationsFrom(destination, form, 1L);
         } catch (IOException e) {
             model.addAttribute("message", "Неуспешно качване на powerpoint файл; Сигурни ли сте, че сте покрили горните критерии?");
             return "upload";
@@ -89,6 +96,12 @@ public class PresentationController {
             return "upload";
         }
         //3rd for each slide create QR code
+        try {
+            slideService.createQRCodeForSlidesOf(presentations);
+        } catch (IOException e) {
+            model.addAttribute("message", "Възникна грешка при генерирането на QR код.");
+            return "upload";
+        }
 
         return "redirect:/presentations";
     }
