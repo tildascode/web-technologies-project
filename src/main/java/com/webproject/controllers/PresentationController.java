@@ -70,11 +70,25 @@ public class PresentationController {
 
             return "upload";
         }
+        //1st extract files
+        File destination = null;
         try {
-            File destination = presentationService.decompressZipToDestination(form.getZipFile());
+            destination = presentationService.decompressZipToDestination(form.getZipFile());
         } catch (IOException e) {
             model.addAttribute("message", "Неуспешно разахивиран файл; Сигурни ли сте, че сте покрили горните критерии?");
+            return "upload";
         }
+        //2nd for each file create presentation
+        try {
+            presentationService.createPresentationsFrom(destination, form, 1L);
+        } catch (IOException e) {
+            model.addAttribute("message", "Неуспешно качване на powerpoint файл; Сигурни ли сте, че сте покрили горните критерии?");
+            return "upload";
+        } catch (StringIndexOutOfBoundsException | NumberFormatException e) {
+            model.addAttribute("message", "Грешна обработка на името на файла.");
+            return "upload";
+        }
+        //3rd for each slide create QR code
 
         return "redirect:/presentations";
     }

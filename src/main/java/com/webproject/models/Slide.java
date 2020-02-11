@@ -1,27 +1,25 @@
 package com.webproject.models;
 
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 import lombok.*;
 import net.glxn.qrgen.javase.QRCode;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import java.io.File;
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Slide {
 
     @Id
     @GeneratedValue
     private Long id;
 
-    private File image;
+    @Column(name = "image", unique = false, length = 100000)
+    private byte[] image;
 
     //private QRCode code;
 

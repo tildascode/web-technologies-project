@@ -9,10 +9,12 @@ import lombok.*;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Presentation {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", updatable = false, nullable = false)
     private Long id;
 
     private String name;
