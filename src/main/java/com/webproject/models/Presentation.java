@@ -29,7 +29,7 @@ public class Presentation {
 
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    @OneToMany(mappedBy = "presentation", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "presentation", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     List<Slide> slides;
 
 }

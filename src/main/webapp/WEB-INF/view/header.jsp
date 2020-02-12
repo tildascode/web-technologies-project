@@ -1,4 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
+
 <!-- header-start -->
 <header>
     <div class="header-area ">
@@ -30,11 +33,15 @@
                             </c:choose>
                         </div>
                     </div>
-                    <div class="col-xl-4 col-md-4 d-none d-md-block">
-                        <div class="login_resiter">
-                            <p><a href="/presentations/userID"><i class="flaticon-user"></i>Профил</a></p>
+                    <c:if test="${request.getSession().getAttribute(user) != null}">
+                        <div class="col-xl-4 col-md-4 d-none d-md-block">
+                            <div class="login_resiter">
+                                <p><a href="/presentations/u/"><i
+                                        class="flaticon-user"></i>Профил</a></p>
+                            </div>
                         </div>
-                    </div>
+                    </c:if>
+
                 </div>
             </div>
         </div>

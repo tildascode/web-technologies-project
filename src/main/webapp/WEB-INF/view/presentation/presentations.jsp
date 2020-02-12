@@ -10,13 +10,13 @@
         <c:forEach items="${presentations}" var="presentation">
             <div class="single_blog">
                 <div class="blog_thumb">
-                    <a href="#">
-                        <img src="/img/most_recent/2.jpg" alt="">
+                    <a href="/presentations/p/${presentation.id}">
+                        <img src="/img/presentations/${presentation.id}/slides/slide0.png" onerror="this.src='/img/most_recent/2.jpg'" alt="">
                     </a>
                 </div>
                 <div class="blog_meta">
-                    <p><a href="slides?presentationID=${presentation.id}">${presentation.name}</a></p>
-                    <h3><a href="slides?presentationID=${presentation.id}">${presentation.name}</a></h3>
+                    <p><a href="/presentations/p/${presentation.id}">${presentation.name}</a></p>
+                    <h3><a href="/presentations/p/${presentation.id}">${presentation.name}</a></h3>
                 </div>
             </div>
         </c:forEach>

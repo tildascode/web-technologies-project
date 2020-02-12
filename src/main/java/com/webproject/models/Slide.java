@@ -19,12 +19,6 @@ public class Slide {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "image", unique = false, length = 100000000)
-    private byte[] image;
-
-    @Column(name = "qr_code", unique = false, length = 100000000)
-    private byte[] qr_code;
-
     int index;
 
     @ToString.Exclude

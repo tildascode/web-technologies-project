@@ -3,13 +3,9 @@ package com.webproject.services;
 import com.webproject.form.PresentationForm;
 import com.webproject.models.Presentation;
 import com.webproject.models.Slide;
+import com.webproject.models.User;
 import com.webproject.repositories.PresentationRepository;
-
-import java.awt.*;
-import java.awt.geom.Rectangle2D;
-import java.awt.image.BufferedImage;
 import java.io.*;
-import java.net.URL;
 import java.nio.file.Files;
 import java.util.*;
 import java.util.List;
@@ -17,12 +13,9 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipInputStream;
 
-import com.webproject.repositories.SlideRepository;
 import com.webproject.repositories.UserRepository;
-import org.apache.poi.xslf.usermodel.XMLSlideShow;
-import org.apache.poi.xslf.usermodel.XSLFSlide;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -41,7 +34,7 @@ public class PresentationService {
     UserRepository userRepository;
 
     @Autowired
-    SlideRepository slideRepository;
+    SlideService slideService;
 
     public Page<Presentation> findAll(int pageIndex, String tag) {
         if (tag != null) {
@@ -51,10 +44,10 @@ public class PresentationService {
         }
     }
 
-    public Optional<Presentation> getPresentationById(Long id) { 	
-    	return presentationRepository.findById(id);
+    public Optional<Presentation> getPresentationById(Long id) {
+        return presentationRepository.findById(id);
     }
-    
+
     public Page<Presentation> findAll(int pageIndex) {
         return presentationRepository.findAll(PageRequest.of(pageIndex, RESULTS_PER_PAGE));
     }
@@ -77,7 +70,7 @@ public class PresentationService {
 
     public void exportAll() {
         ZipUtil
-                .pack(new File("src/main/resources/static/files"), new File("src/main/resources/static/presentations.zip"));
+            .pack(new File("src/main/resources/static/files"), new File("src/main/resources/static/presentations.zip"));
     }
 
     public File decompressZipToDestination(MultipartFile zipFile) throws IOException, ZipException {
@@ -117,95 +110,51 @@ public class PresentationService {
         return destFile;
     }
 
-    public List<Presentation> createPresentationsFrom(File destination, PresentationForm input, Long userId)
-            throws IOException, StringIndexOutOfBoundsException, NumberFormatException {
-        //for each file make a presentation
-        File[] listOfFiles = destination.listFiles();
-        List<Presentation> presentationsToSave = new ArrayList<>();
-        for (File file : listOfFiles) {
+    public List<Presentation> createPresentations(File destination, PresentationForm input,
+                                                  Long userId) throws StringIndexOutOfBoundsException, NumberFormatException, IOException {
+        File[] files = destination.listFiles();
+        List<Presentation> presentations = new ArrayList<>();
+        for (File file : files) {
             if (file.isFile()) {
-                System.out.println("File name is " + file.getName());
-                // presentation for repository
-                Presentation p = Presentation.builder()
-                        .name(input.getName())
-                        .tags(input.getTags())
-                        .user(userRepository.getOne(userId)).build();
-                List<Slide> slidesToSave = new ArrayList<>();
-                //create directory for presentation with name
-                File presentationFolder = new File("src/main/resources/static/img/presentations",p.getName());
-                if (!presentationFolder.exists()) {
-                    Files.createDirectory(presentationFolder.toPath());
-                }
-                //create slide directory
-                String destSlides = "slides";
-                File slidesDir = new File(presentationFolder,destSlides); //dest here is the name of the folder to save all the slides
-                if (!slidesDir.exists()) {
-                    Files.createDirectory(slidesDir.toPath());
-                }
-                //String destImages = "slides" + File.separator + input.getZipFile().getOriginalFilename();
-                //File outFile = new File(destImages);
-                //System.out.println("Destination is " + destSlides);
-                //if (!outFile.exists()) {
-                //    Files.createDirectory(outFile.toPath());
-                //}
-                FileInputStream inputStream = new FileInputStream(file);
-                XMLSlideShow ppt = new XMLSlideShow(inputStream);
-                //getting the dimensions and size of the slide
-                Dimension pageSize = ppt.getPageSize();
-                List<XSLFSlide> slide = ppt.getSlides();
-                //for all slides create images
-                createPngFromSlides(slide, new BufferedImage(pageSize.width, pageSize.height, BufferedImage.TYPE_INT_RGB), pageSize, slidesDir);
-                if (slidesDir.exists() && slidesDir.isDirectory()) {
-                    final FilenameFilter IMAGE_FILTER = (dir, name) -> name.endsWith(".png"); //make sure only png are valid
-                    for (final File f : slidesDir.listFiles(IMAGE_FILTER)) {        	
-                        byte[] slideBytes = Files.readAllBytes(f.toPath());
-                        int slideStringIndex = f.getName().lastIndexOf("slide") + 5;
-                        int slideIndex = Integer.valueOf(f.getName().substring(slideStringIndex, f.getName().indexOf(".png")));
-                        slidesToSave.add(Slide.builder().index(slideIndex).image(slideBytes).presentation(p).build());
-                    }
-                    p.setSlides(slidesToSave);
-                    p = presentationRepository.save(p);
-                    slideRepository.saveAll(slidesToSave);
-                    presentationsToSave.add(p);
-                }
+                presentations.add(createPresentation(input, file, userRepository.getOne(userId)));
             }
         }
-        return presentationsToSave;
+        return presentations;
     }
 
-    private void createPngFromSlides(List<XSLFSlide> slide, BufferedImage img, Dimension pageSize, File outFile) throws IOException {
-        for (int i = 0; i < slide.size(); i++) {
-            Graphics2D graphics = img.createGraphics();
-            //clear the drawing area
-            graphics.setPaint(Color.white);
-            graphics.fill(new Rectangle2D.Float(0, 0, pageSize.width, pageSize.height));
-            //render
-            slide.get(i).draw(graphics);
-            //creating an image file as output
-            if (!outFile.exists()) {
-                outFile.mkdir();
-            }
-            String slideDestination = outFile.getCanonicalPath() + File.separator + "slide" + i + ".png"; // slide name in directory
-            System.out.println("Creating " + slideDestination);
-            OutputStream out = new FileOutputStream(slideDestination);
-            javax.imageio.ImageIO.write(img, "png", out);
-            out.close();
+    private Presentation createPresentation(PresentationForm form, File file, User user) throws IOException {
+        Presentation presentation = Presentation.builder()
+                                                .name(form.getName())
+                                                .tags(form.getTags())
+                                                .user(user).build();
+       presentationRepository.save(presentation);
+        File presentationDir = new File("src/main/resources/static/img/presentations", presentation.getId().toString());
+        if (!presentationDir.exists()) {
+            Files.createDirectory(presentationDir.toPath());
         }
+        File slidesDir = new File(presentationDir, "slides");
+        if (!slidesDir.exists()) {
+            Files.createDirectory(slidesDir.toPath());
+        }
+        List<Slide> slides = slideService.createSlides(file, slidesDir, presentation);
+        presentation.setSlides(slides);
+
+        return presentation;
     }
-    
-	public File uploadPresentation(MultipartFile zipFile) throws IOException {
+
+    public File uploadPresentation(MultipartFile zipFile) throws IOException {
         byte[] buffer = new byte[1024];
-		InputStream fis = zipFile.getInputStream();
-		File destDir = createTempDirectory();
-		File newFile = new File(destDir, zipFile.getOriginalFilename());
-		FileOutputStream fos = new FileOutputStream(newFile);
-		int len;
-		while ((len = fis.read(buffer)) > 0) {
-			fos.write(buffer, 0, len);
-		}
-		fos.close();
-		fis.close();
-		return newFile.getParentFile();
-	}
+        InputStream fis = zipFile.getInputStream();
+        File destDir = createTempDirectory();
+        File newFile = new File(destDir, zipFile.getOriginalFilename());
+        FileOutputStream fos = new FileOutputStream(newFile);
+        int len;
+        while ((len = fis.read(buffer)) > 0) {
+            fos.write(buffer, 0, len);
+        }
+        fos.close();
+        fis.close();
+        return newFile.getParentFile();
+    }
 
 }

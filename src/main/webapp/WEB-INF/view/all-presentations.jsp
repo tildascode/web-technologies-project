@@ -20,7 +20,6 @@
     <link href="/css/animate.css" rel="stylesheet">
     <link href="/css/slicknav.css" rel="stylesheet">
     <link href="/css/style.css" rel="stylesheet">
-    <!-- <link rel="stylesheet" href="css/responsive.css"> -->
 </head>
 
 <body>
