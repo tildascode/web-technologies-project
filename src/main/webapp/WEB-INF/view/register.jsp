@@ -1,14 +1,10 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<meta http-equiv="x-ua-compatible" content="ie=edge">
-<title>Login</title>
-<meta name="description" content="">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="shortcut icon" type="image/x-icon" href="img/favicon.png">
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Registration</title>
 <!-- CSS here -->
 <link rel="stylesheet" href="/css/bootstrap.min.css">
 <link rel="stylesheet" href="/css/owl.carousel.min.css">
@@ -21,11 +17,12 @@
 <link rel="stylesheet" href="/css/slicknav.css">
 <link rel="stylesheet" href="/css/style.css">
 <!-- <link rel="stylesheet" href="css/responsive.css"> -->
-
 </head>
 <body background="/img/banner/1.png">
+
 	<div class="col-lg-12 col-md-12" align="center">
-		<form:form modelAttribute="user" action="home" method="post">
+		<form:form modelAttribute="user" action="registerProcess"
+			method="post">
 			<div>
 				<form:label path="userName">Username:</form:label>
 				<form:input path="userName" name="userName" />
@@ -34,16 +31,13 @@
 				<form:label path="password">Password:</form:label>
 				<form:password path="password" name="password" />
 			</div>
-			<div>
-				<form:button name="login" class="genric-btn info circle">Login</form:button>
-			</div>
-		</form:form>
-		
-		If you don't have an account, please register <a class="link" href="register">here</a>
-		
-		<div align="center" style="font-style: italic; color: red;">${message}</div>
-	</div>
 
+			<div>
+				<form:button id="register" class="genric-btn info circle">Register</form:button>
+			</div>
+
+		</form:form>
+	</div>
 	<!-- JS here -->
 	<script src="/js/vendor/modernizr-3.5.0.min.js"></script>
 	<script src="/js/vendor/jquery-1.12.4.min.js"></script>

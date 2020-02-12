@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import com.webproject.models.User;
 import com.webproject.repositories.UserRepository;
 
@@ -26,6 +27,17 @@ public class UserService {
 			}
 		}
 		return  null;
+	}
+	
+	public void register(User user) {
+		userRepository.save(user);
+	}
+	
+	public User validateNewUser(User user) {
+		if(user.getUserName() == null || user.getPassword() == null) {
+			return null;
+		}
+		return user;
 	}
 
 }
