@@ -138,7 +138,6 @@ public class PresentationService {
         }
         List<Slide> slides = slideService.createSlides(fis, slidesDir, presentation);
         presentation.setSlides(slides);
-
         return presentation;
     }
 
