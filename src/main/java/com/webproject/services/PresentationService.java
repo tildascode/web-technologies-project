@@ -128,6 +128,7 @@ public class PresentationService {
                                                 .name(form.getName())
                                                 .tags(form.getTags())
                                                 .user(userRepository.getOne(userId)).build();
+        presentationRepository.save(presentation);
         presentation.setSlides(slideService.createSlides(fis, presentation));
         presentationRepository.save(presentation);
         return presentation;
