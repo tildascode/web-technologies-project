@@ -60,6 +60,14 @@ public class PresentationController {
 
     }
 
+    @GetMapping("/delete/p/{presentationID}")
+    public String deletePresentationForId(@PathVariable Long presentationID,
+                                          Model model) {
+        presentationService.deletePresentationForId(presentationID);
+        return getAllPresentations(model, 0, null);
+
+    }
+
     @GetMapping(value = "/export")
     @ResponseBody
     public String export() {

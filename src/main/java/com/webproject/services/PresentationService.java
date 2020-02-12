@@ -68,6 +68,10 @@ public class PresentationService {
         return tags;
     }
 
+    public void deletePresentationForId(Long presentationID) {
+        presentationRepository.deleteById(presentationID);
+    }
+
     public void exportAll() {
         ZipUtil
             .pack(new File("src/main/resources/files"), new File("src/main/resources/static/presentations.zip"));

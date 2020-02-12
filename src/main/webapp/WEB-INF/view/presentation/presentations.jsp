@@ -19,6 +19,9 @@
                     <div class="blog_meta">
                         <p><a href="/presentations/p/${presentation.id}">${presentation.name}</a></p>
                         <h3><a href="/presentations/p/${presentation.id}">${presentation.name}</a></h3>
+                        <a href="/presentations/delete/p/${presentation.id}"
+                           style="width:50px;height:50px;left: 0;top: 0;">Изтрий</a>
+
                     </div>
                 </div>
             </c:forEach>
