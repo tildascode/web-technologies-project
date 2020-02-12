@@ -87,15 +87,10 @@ public class PresentationController {
 
             return "upload";
         }
-
-        // 1st extract files
-        File destination;
-
-        // if we upload one presentation
         if (form.getZipFile().getOriginalFilename().contains(".pptx") ||
             form.getZipFile().getOriginalFilename().contains(".ppt")) {
             try {
-                destination = presentationService.uploadPresentation(form.getZipFile());
+                presentationService.uploadPresentation(form, 1L);
             } catch (IOException e) {
                 model.addAttribute("message",
                                    "Неуспешно качване на презентация; Сигурни ли сте, че презентацията е с разширение .pptx или .ppt ?");
@@ -104,26 +99,17 @@ public class PresentationController {
             }
         } else {
             try {
-                destination = presentationService.decompressZipToDestination(form.getZipFile());
+                File destination = presentationService.decompressZipToDestination(form.getZipFile());
+                presentationService.createPresentations(destination, form, 1L);
             } catch (IOException e) {
                 model.addAttribute("message",
                                    "Неуспешно разахивиран файл; Сигурни ли сте, че сте покрили горните критерии?");
                 e.printStackTrace();
                 return "upload";
+            } catch (StringIndexOutOfBoundsException | NumberFormatException e) {
+                model.addAttribute("message", "Грешна обработка на името на файла.");
+                return "upload";
             }
-        }
-
-        // 2nd for each file create presentation
-        try {
-            presentationService.createPresentations(destination, form, 1L);
-        } catch (IOException e) {
-            model.addAttribute("message",
-                               "Неуспешно качване на powerpoint файл; Сигурни ли сте, че сте покрили горните критерии?");
-            e.printStackTrace();
-            return "upload";
-        } catch (StringIndexOutOfBoundsException | NumberFormatException e) {
-            model.addAttribute("message", "Грешна обработка на името на файла.");
-            return "upload";
         }
 
         return "redirect:/presentations";

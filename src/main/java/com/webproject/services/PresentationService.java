@@ -116,18 +116,18 @@ public class PresentationService {
         List<Presentation> presentations = new ArrayList<>();
         for (File file : files) {
             if (file.isFile()) {
-                presentations.add(createPresentation(input, file, userRepository.getOne(userId)));
+                presentations.add(createPresentation(input, new FileInputStream(file), userRepository.getOne(userId)));
             }
         }
         return presentations;
     }
 
-    private Presentation createPresentation(PresentationForm form, File file, User user) throws IOException {
+    private Presentation createPresentation(PresentationForm form, InputStream fis, User user) throws IOException {
         Presentation presentation = Presentation.builder()
                                                 .name(form.getName())
                                                 .tags(form.getTags())
                                                 .user(user).build();
-       presentationRepository.save(presentation);
+        presentationRepository.save(presentation);
         File presentationDir = new File("src/main/resources/presentations", presentation.getId().toString());
         if (!presentationDir.exists()) {
             Files.createDirectory(presentationDir.toPath());
@@ -136,25 +136,14 @@ public class PresentationService {
         if (!slidesDir.exists()) {
             Files.createDirectory(slidesDir.toPath());
         }
-        List<Slide> slides = slideService.createSlides(file, slidesDir, presentation);
+        List<Slide> slides = slideService.createSlides(fis, slidesDir, presentation);
         presentation.setSlides(slides);
 
         return presentation;
     }
 
-    public File uploadPresentation(MultipartFile zipFile) throws IOException {
-        byte[] buffer = new byte[1024];
-        InputStream fis = zipFile.getInputStream();
-        File destDir = createTempDirectory();
-        File newFile = new File(destDir, zipFile.getOriginalFilename());
-        FileOutputStream fos = new FileOutputStream(newFile);
-        int len;
-        while ((len = fis.read(buffer)) > 0) {
-            fos.write(buffer, 0, len);
-        }
-        fos.close();
-        fis.close();
-        return newFile.getParentFile();
+    public void uploadPresentation(PresentationForm form, Long userId) throws IOException {
+        createPresentation(form, form.getZipFile().getInputStream(), userRepository.getOne(userId));
     }
 
 }

@@ -11,7 +11,7 @@
             <div class="single_blog">
                 <div class="blog_thumb">
                     <a href="/presentations/p/${presentation.id}">
-                        <img src="/img/presentations/${presentation.id}/slides/slide0.png" onerror="this.src='/img/most_recent/2.jpg'" alt="">
+                        <img src="${presentation.slides[0].imageUrl}" onerror="this.src='/img/most_recent/2.jpg'" alt="">
                     </a>
                 </div>
                 <div class="blog_meta">

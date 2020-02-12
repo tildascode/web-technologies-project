@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -45,9 +46,9 @@ public class SlideService {
         "api_key", "649891352997634",
         "api_secret", "1UOOSWMU05PKBX2hAxDJEIy9i1c"));
 
-    public List<Slide> createSlides(File file, File slidesDir, Presentation presentation) throws IOException {
+    public List<Slide> createSlides(InputStream fis, File slidesDir, Presentation presentation) throws IOException {
         List<Slide> slides = new ArrayList<>();
-        XMLSlideShow ppt = new XMLSlideShow(new FileInputStream(file));
+        XMLSlideShow ppt = new XMLSlideShow(fis);
         Dimension pageSize = ppt.getPageSize();
         List<XSLFSlide> xslfSlides = ppt.getSlides();
         for (int i = 0; i < xslfSlides.size(); i++) {
@@ -71,7 +72,7 @@ public class SlideService {
         }
         String fileName = "qrCode" + index + ".png";
         ByteArrayOutputStream qrCodeImage = QRCode
-            .from(domainName + "/presentations/p/" + presentationId + "?slide=" + index)
+            .from(domainName + "/presentations/p/" + presentationId + "/slide/" + index)
             .to(ImageType.PNG)
             .withSize(250, 250).stream();
         File qrCode = new File(qrCodeDir + File.separator + fileName);
