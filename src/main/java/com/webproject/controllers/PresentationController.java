@@ -90,7 +90,7 @@ public class PresentationController {
         if (form.getZipFile().getOriginalFilename().contains(".pptx") ||
             form.getZipFile().getOriginalFilename().contains(".ppt")) {
             try {
-                presentationService.uploadPresentation(form, 1L);
+                presentationService.createPresentation(form, form.getZipFile().getInputStream(), 1L);
             } catch (IOException e) {
                 model.addAttribute("message",
                                    "Неуспешно качване на презентация; Сигурни ли сте, че презентацията е с разширение .pptx или .ppt ?");

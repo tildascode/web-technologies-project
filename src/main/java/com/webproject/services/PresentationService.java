@@ -116,33 +116,20 @@ public class PresentationService {
         List<Presentation> presentations = new ArrayList<>();
         for (File file : files) {
             if (file.isFile()) {
-                presentations.add(createPresentation(input, new FileInputStream(file), userRepository.getOne(userId)));
+                presentations.add(createPresentation(input, new FileInputStream(file), userId));
             }
         }
         return presentations;
     }
 
-    private Presentation createPresentation(PresentationForm form, InputStream fis, User user) throws IOException {
+    public Presentation createPresentation(PresentationForm form, InputStream fis, Long userId) throws IOException {
         Presentation presentation = Presentation.builder()
                                                 .name(form.getName())
                                                 .tags(form.getTags())
-                                                .user(user).build();
+                                                .user(userRepository.getOne(userId)).build();
         presentationRepository.save(presentation);
-        File presentationDir = new File("src/main/resources/presentations", presentation.getId().toString());
-        if (!presentationDir.exists()) {
-            Files.createDirectory(presentationDir.toPath());
-        }
-        File slidesDir = new File(presentationDir, "slides");
-        if (!slidesDir.exists()) {
-            Files.createDirectory(slidesDir.toPath());
-        }
-        List<Slide> slides = slideService.createSlides(fis, slidesDir, presentation);
-        presentation.setSlides(slides);
+        presentation.setSlides(slideService.createSlides(fis, presentation));
         return presentation;
-    }
-
-    public void uploadPresentation(PresentationForm form, Long userId) throws IOException {
-        createPresentation(form, form.getZipFile().getInputStream(), userRepository.getOne(userId));
     }
 
 }

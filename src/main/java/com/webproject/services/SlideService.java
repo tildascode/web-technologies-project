@@ -46,7 +46,7 @@ public class SlideService {
         "api_key", "649891352997634",
         "api_secret", "1UOOSWMU05PKBX2hAxDJEIy9i1c"));
 
-    public List<Slide> createSlides(InputStream fis, File slidesDir, Presentation presentation) throws IOException {
+    public List<Slide> createSlides(InputStream fis, Presentation presentation) throws IOException {
         List<Slide> slides = new ArrayList<>();
         XMLSlideShow ppt = new XMLSlideShow(fis);
         Dimension pageSize = ppt.getPageSize();
@@ -63,24 +63,20 @@ public class SlideService {
     }
 
     public String createAndSaveQrCode(Long presentationId, int index) throws IOException {
-        File qrCodeImage = QRCode
-            .from(domainName + "/presentations/p/" + presentationId + "/slide/" + index)
-            .to(ImageType.PNG)
-            .withSize(250, 250).file();
-        return uploadToCloudinary(qrCodeImage);
+        return uploadToCloudinary(QRCode
+                                      .from(domainName + "/presentations/p/" + presentationId + "/slide/" + index)
+                                      .to(ImageType.PNG)
+                                      .withSize(250, 250).file());
     }
 
-    private String createAndSaveSlideImage(Dimension pageSize,
-                                           XSLFSlide xslfSlide) throws IOException {
+    private String createAndSaveSlideImage(Dimension pageSize, XSLFSlide xslfSlide) throws IOException {
         BufferedImage slideImage = new BufferedImage(pageSize.width, pageSize.height, BufferedImage.TYPE_INT_RGB);
         Graphics2D graphics = slideImage.createGraphics();
         graphics.setPaint(Color.white);
         graphics.fill(new Rectangle2D.Float(0, 0, pageSize.width, pageSize.height));
         xslfSlide.draw(graphics);
         File tempFile = File.createTempFile("temp", ".png");
-        OutputStream out = new FileOutputStream(tempFile);
-        ImageIO.write(slideImage, "png", out);
-        out.close();
+        ImageIO.write(slideImage, "png", tempFile);
         return uploadToCloudinary(tempFile);
 
     }
