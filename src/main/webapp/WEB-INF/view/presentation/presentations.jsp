@@ -7,19 +7,22 @@
     </div>
     <%@include file="paging.jsp" %>
     <div class="row">
-        <c:forEach items="${presentations}" var="presentation">
-            <div class="single_blog">
-                <div class="blog_thumb">
-                    <a href="/presentations/p/${presentation.id}">
-                        <img src="${presentation.slides[0].imageUrl}" onerror="this.src='/img/most_recent/2.jpg'" alt="">
-                    </a>
+        <c:if test="${not empty presentations}">
+            <c:forEach items="${presentations}" var="presentation">
+                <div class="single_blog">
+                    <div class="blog_thumb">
+                        <a href="/presentations/p/${presentation.id}">
+                            <img src="${presentation.slides[0].imageUrl}" onerror="this.src='/img/most_recent/2.jpg'"
+                                 alt="">
+                        </a>
+                    </div>
+                    <div class="blog_meta">
+                        <p><a href="/presentations/p/${presentation.id}">${presentation.name}</a></p>
+                        <h3><a href="/presentations/p/${presentation.id}">${presentation.name}</a></h3>
+                    </div>
                 </div>
-                <div class="blog_meta">
-                    <p><a href="/presentations/p/${presentation.id}">${presentation.name}</a></p>
-                    <h3><a href="/presentations/p/${presentation.id}">${presentation.name}</a></h3>
-                </div>
-            </div>
-        </c:forEach>
+            </c:forEach>
+        </c:if>
     </div>
     <jsp:include page="paging.jsp"/>
 </div>

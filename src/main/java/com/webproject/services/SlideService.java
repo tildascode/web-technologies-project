@@ -41,7 +41,7 @@ public class SlideService {
     @Autowired
     private SlideRepository slideRepository;
 
-    private static Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
+    private Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
         "cloud_name", "dmxmc676d",
         "api_key", "649891352997634",
         "api_secret", "1UOOSWMU05PKBX2hAxDJEIy9i1c"));
@@ -49,25 +49,22 @@ public class SlideService {
     public List<Slide> createSlides(InputStream fis, Presentation presentation) throws IOException {
         List<Slide> slides = new ArrayList<>();
         XMLSlideShow ppt = new XMLSlideShow(fis);
-        Dimension pageSize = ppt.getPageSize();
         List<XSLFSlide> xslfSlides = ppt.getSlides();
         for (int i = 0; i < xslfSlides.size(); i++) {
+            String qrCodeUrl= uploadToCloudinary(QRCode
+                                                    .from(domainName + "/presentations/p/" + presentation.getId() + "/s/" + i)
+                                                    .to(ImageType.PNG)
+                                                    .withSize(250, 250).file());;
             slides
                 .add(Slide.builder().index(i).presentation(presentation)
-                          .qrCodeUrl(createAndSaveQrCode(presentation.getId(), i))
-                          .imageUrl(createAndSaveSlideImage(pageSize, xslfSlides.get(i)))
+                          .qrCodeUrl(qrCodeUrl)
+                          .imageUrl(createAndSaveSlideImage( ppt.getPageSize(), xslfSlides.get(i)))
                           .build());
         }
         slideRepository.saveAll(slides);
         return slides;
     }
 
-    public String createAndSaveQrCode(Long presentationId, int index) throws IOException {
-        return uploadToCloudinary(QRCode
-                                      .from(domainName + "/presentations/p/" + presentationId + "/slide/" + index)
-                                      .to(ImageType.PNG)
-                                      .withSize(250, 250).file());
-    }
 
     private String createAndSaveSlideImage(Dimension pageSize, XSLFSlide xslfSlide) throws IOException {
         BufferedImage slideImage = new BufferedImage(pageSize.width, pageSize.height, BufferedImage.TYPE_INT_RGB);
