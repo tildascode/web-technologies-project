@@ -22,7 +22,7 @@ import java.io.IOException;
 
 
 @Controller
-@RequestMapping("/presentations")
+@RequestMapping("presentations")
 public class PresentationController {
 
     @Autowired
@@ -45,9 +45,18 @@ public class PresentationController {
     }
 
     @GetMapping("/p/{presentationID}")
-    public String getPresentationForId(@PathVariable Long presentationID, Model model) {
+    public String getPresentationForId(@PathVariable Long presentationID,
+                                       Model model) {
         model.addAttribute("presentation", presentationService.getPresentationById(presentationID).get());
         return "presentation";
+
+    }
+
+    @GetMapping("/p/{presentationID}/s/{slideID}")
+    public String getSlideForPresentation(@PathVariable("presentationID") Long presentationID,
+                                          @PathVariable(value = "slideID") Integer slideID) {
+        Presentation presentation = presentationService.getPresentationById(presentationID).get();
+        return "redirect:" + presentation.getSlides().get(slideID).getImageUrl();
 
     }
 

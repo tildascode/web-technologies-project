@@ -21,7 +21,9 @@ public class Slide {
 
     int index;
 
-    String qr;
+    String qrCodeUrl;
+
+    String imageUrl;
 
     @ToString.Exclude
     @EqualsAndHashCode.Exclude

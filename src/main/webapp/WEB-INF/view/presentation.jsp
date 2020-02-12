@@ -1,7 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
-
 <!doctype html>
 <html class="no-js" lang="zxx">
 
@@ -40,14 +39,17 @@
             <div class="col-xl-12">
                 <div class="photo_gallery_active owl-carousel">
                     <c:forEach items="${presentation.slides}" var="slide">
-                        <div class="single_photo_gallery gallery_bg_${slide.index}"
-                             style="background-image: url('/img/presentations/${presentation.id}/slides/slide${slide.index}.png');background-size: cover">
-                            <div class="photo_caption">
-                                <h3>${presentation.name} Slide ${slide.index}</h3>
+                        <a href="${slide.imageUrl}">
+                            <div
+                                    class="single_photo_gallery gallery_bg_${slide.index}"
+                                    style="background-image: url('${slide.imageUrl}');background-size: cover">
+                                <div class="photo_caption">
+                                    <h3>${presentation.name} Slide ${slide.index}</h3>
+                                </div>
+                                <img style="width:50px;height:50px;position: absolute;right: 0;bottom: 0;"
+                                     src="${slide.qrCodeUrl}"/>
                             </div>
-                            <img style="width:50px;height:50px;position: absolute;right: 0;bottom: 0;"
-                                 src="/img/presentations/${presentation.id}/qrCodes/${slide.qr}"/>
-                        </div>
+                        </a>
                     </c:forEach>
                 </div>
             </div>

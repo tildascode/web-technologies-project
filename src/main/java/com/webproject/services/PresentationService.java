@@ -70,7 +70,7 @@ public class PresentationService {
 
     public void exportAll() {
         ZipUtil
-            .pack(new File("src/main/resources/static/files"), new File("src/main/resources/static/presentations.zip"));
+            .pack(new File("src/main/resources/files"), new File("src/main/resources/static/presentations.zip"));
     }
 
     public File decompressZipToDestination(MultipartFile zipFile) throws IOException, ZipException {
@@ -128,7 +128,7 @@ public class PresentationService {
                                                 .tags(form.getTags())
                                                 .user(user).build();
        presentationRepository.save(presentation);
-        File presentationDir = new File("src/main/resources/static/img/presentations", presentation.getId().toString());
+        File presentationDir = new File("src/main/resources/presentations", presentation.getId().toString());
         if (!presentationDir.exists()) {
             Files.createDirectory(presentationDir.toPath());
         }
