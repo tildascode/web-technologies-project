@@ -21,6 +21,8 @@ public class Slide {
 
     int index;
 
+    String qr;
+
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @ManyToOne

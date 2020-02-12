@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.webproject.models.Presentation;
+import javax.imageio.ImageIO;
 import net.glxn.qrgen.core.image.ImageType;
 import net.glxn.qrgen.javase.QRCode;
 import org.apache.poi.xslf.usermodel.XMLSlideShow;
@@ -40,26 +42,27 @@ public class SlideService {
             String fileName = "slide" + i + ".png";
             String slideFile = slidesDir.getCanonicalPath() + File.separator + fileName;
             createAndSaveSlideImage(slideFile, pageSize, xslfSlides.get(i));
-            slides.add(Slide.builder().index(i).presentation(presentation).build());
+            String qrCode = createAndSaveQrCode(presentation.getId(), i);
+            slides.add(Slide.builder().index(i).presentation(presentation).qr(qrCode).build());
         }
         slideRepository.saveAll(slides);
-        createAndSaveQrCodes(presentation.getId(), slides);
         return slides;
     }
 
-    public void createAndSaveQrCodes(Long presentationId, List<Slide> slides) throws IOException {
-        File qrCodeFolder = new File(
+    public String createAndSaveQrCode(Long presentationId, int index) throws IOException {
+        File dir = new File(
             "src/main/resources/static/img/presentations" + File.separator + presentationId, "qrCodes");
-        if (!qrCodeFolder.exists()) {
-            Files.createDirectory(qrCodeFolder.toPath());
+        if (!dir.exists()) {
+            Files.createDirectory(dir.toPath());
         }
-        for (Slide s : slides) {
-            File file = QRCode.from("p" + presentationId + "s" + s.getId()).to(ImageType.PNG).withSize(250, 250).file();
-            File qrCode = new File(qrCodeFolder + File.separator + file.getName());
-            if (!qrCode.exists()) {
-                Files.createDirectory(qrCode.toPath());
-            }
-        }
+        ByteArrayOutputStream file = QRCode.from("p" + presentationId + "s" + index).to(ImageType.PNG)
+                                           .withSize(250, 250).stream();
+        String fileName = "qrCode" + index + ".png";
+        File qrCode = new File(dir + File.separator + fileName);
+        FileOutputStream fos = new FileOutputStream(qrCode);
+        fos.write(file.toByteArray());
+        fos.close();
+        return fileName;
     }
 
     private void createAndSaveSlideImage(String slideFile, Dimension pageSize, XSLFSlide xslfSlide) throws IOException {
@@ -68,9 +71,8 @@ public class SlideService {
         graphics.setPaint(Color.white);
         graphics.fill(new Rectangle2D.Float(0, 0, pageSize.width, pageSize.height));
         xslfSlide.draw(graphics);
-        System.out.println("Creating " + slideFile);
         OutputStream out = new FileOutputStream(slideFile);
-        javax.imageio.ImageIO.write(slideImage, "png", out);
+        ImageIO.write(slideImage, "png", out);
         out.close();
     }
 

@@ -15,8 +15,8 @@ insert into presentation values(10, 'Social','social,cool',1);
 insert into presentation values(11, 'Personal Skills','social',1);
 insert into presentation values(12, 'Java World','java,technology',1);
 
-insert into slide(id,presentation_id,index) values(1,1,0);
-insert into slide(id,presentation_id,index) values(2,1,1);
-insert into slide(id,presentation_id,index) values(3,1,2);
-insert into slide(id,presentation_id,index) values(4,1,3);
-insert into slide(id,presentation_id,index) values(5,1,4);
+insert into slide(id,presentation_id,index,qr) values(1,1,0,'1.png');
+insert into slide(id,presentation_id,index,qr) values(2,1,1,'2.png');
+insert into slide(id,presentation_id,index,qr) values(3,1,2,'3.png');
+insert into slide(id,presentation_id,index,qr) values(4,1,3,'4.png');
+insert into slide(id,presentation_id,index,qr) values(5,1,4,'5.png');

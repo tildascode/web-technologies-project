@@ -34,17 +34,19 @@
         <div class="row">
             <div class="col-xl-12">
                 <div class="section_title mb-33">
-                    <h3>${presentation.name} Presentation</h3>
+                    <h3>${presentation.name}</h3>
                 </div>
             </div>
             <div class="col-xl-12">
                 <div class="photo_gallery_active owl-carousel">
                     <c:forEach items="${presentation.slides}" var="slide">
                         <div class="single_photo_gallery gallery_bg_${slide.index}"
-                             style="background-image: url('/img/presentations/${presentation.id}/slides/slide${slide.index}.png');">
+                             style="background-image: url('/img/presentations/${presentation.id}/slides/slide${slide.index}.png');background-size: cover">
                             <div class="photo_caption">
                                 <h3>${presentation.name} Slide ${slide.index}</h3>
                             </div>
+                            <img style="width:50px;height:50px;position: absolute;right: 0;bottom: 0;"
+                                 src="/img/presentations/${presentation.id}/qrCodes/${slide.qr}"/>
                         </div>
                     </c:forEach>
                 </div>
