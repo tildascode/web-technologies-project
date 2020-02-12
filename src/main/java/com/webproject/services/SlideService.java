@@ -52,12 +52,10 @@ public class SlideService {
         Dimension pageSize = ppt.getPageSize();
         List<XSLFSlide> xslfSlides = ppt.getSlides();
         for (int i = 0; i < xslfSlides.size(); i++) {
-            String fileName = "slide" + i + ".png";
-            String slideFile = slidesDir.getCanonicalPath() + File.separator + fileName;
-            String slideUrl = createAndSaveSlideImage(slideFile, pageSize, xslfSlides.get(i));
-            String qrCodeUrl = createAndSaveQrCode(presentation.getId(), i);
             slides
-                .add(Slide.builder().index(i).presentation(presentation).qrCodeUrl(qrCodeUrl).imageUrl(slideUrl)
+                .add(Slide.builder().index(i).presentation(presentation)
+                          .qrCodeUrl(createAndSaveQrCode(presentation.getId(), i))
+                          .imageUrl(createAndSaveSlideImage(pageSize, xslfSlides.get(i)))
                           .build());
         }
         slideRepository.saveAll(slides);
@@ -65,34 +63,25 @@ public class SlideService {
     }
 
     public String createAndSaveQrCode(Long presentationId, int index) throws IOException {
-        File qrCodeDir = new File(
-            "src/main/resources/presentations" + File.separator + presentationId, "qrCodes");
-        if (!qrCodeDir.exists()) {
-            Files.createDirectory(qrCodeDir.toPath());
-        }
-        String fileName = "qrCode" + index + ".png";
-        ByteArrayOutputStream qrCodeImage = QRCode
+        File qrCodeImage = QRCode
             .from(domainName + "/presentations/p/" + presentationId + "/slide/" + index)
             .to(ImageType.PNG)
-            .withSize(250, 250).stream();
-        File qrCode = new File(qrCodeDir + File.separator + fileName);
-        FileOutputStream fos = new FileOutputStream(qrCode);
-        fos.write(qrCodeImage.toByteArray());
-        fos.close();
-        return uploadToCloudinary(qrCode);
+            .withSize(250, 250).file();
+        return uploadToCloudinary(qrCodeImage);
     }
 
-    private String createAndSaveSlideImage(String slideFile, Dimension pageSize,
+    private String createAndSaveSlideImage(Dimension pageSize,
                                            XSLFSlide xslfSlide) throws IOException {
         BufferedImage slideImage = new BufferedImage(pageSize.width, pageSize.height, BufferedImage.TYPE_INT_RGB);
         Graphics2D graphics = slideImage.createGraphics();
         graphics.setPaint(Color.white);
         graphics.fill(new Rectangle2D.Float(0, 0, pageSize.width, pageSize.height));
         xslfSlide.draw(graphics);
-        OutputStream out = new FileOutputStream(slideFile);
+        File tempFile = File.createTempFile("temp", ".png");
+        OutputStream out = new FileOutputStream(tempFile);
         ImageIO.write(slideImage, "png", out);
         out.close();
-        return uploadToCloudinary(new File(slideFile));
+        return uploadToCloudinary(tempFile);
 
     }
 
@@ -100,5 +89,6 @@ public class SlideService {
         Map uploadResult = cloudinary.uploader().upload(qrCode, ObjectUtils.emptyMap());
         return (String) uploadResult.get("secure_url");
     }
+
 
 }
