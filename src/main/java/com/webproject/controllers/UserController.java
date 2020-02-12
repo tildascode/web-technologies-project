@@ -42,10 +42,6 @@ public class UserController {
 	@RequestMapping(value = "/home", method = RequestMethod.GET)
 	public String getHome(HttpServletRequest request, HttpServletResponse response,
 									 @ModelAttribute("user") User user) {
-		User u = userService.validateUser(user);
-		if (null == u) {
-			return "login";
-		}
 		return "home";
 	}
 }
