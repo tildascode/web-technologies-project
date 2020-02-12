@@ -7,14 +7,11 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
+
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.file.Files;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +27,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.webproject.models.Slide;
-import com.webproject.repositories.SlideRepository;
 
 @Service
 public class SlideService {
@@ -39,19 +35,15 @@ public class SlideService {
     private String domainName;
 
     @Autowired
-    private SlideRepository slideRepository;
+    private CloudinaryService cloudinaryService;
 
-    private Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
-        "cloud_name", "dmxmc676d",
-        "api_key", "649891352997634",
-        "api_secret", "1UOOSWMU05PKBX2hAxDJEIy9i1c"));
 
     public List<Slide> createSlides(InputStream fis, Presentation presentation) throws IOException {
         List<Slide> slides = new ArrayList<>();
         XMLSlideShow ppt = new XMLSlideShow(fis);
         List<XSLFSlide> xslfSlides = ppt.getSlides();
         for (int i = 0; i < xslfSlides.size(); i++) {
-            String qrCodeUrl= uploadToCloudinary(QRCode
+            String qrCodeUrl= cloudinaryService.uploadToCloudinary(QRCode
                                                     .from(domainName + "/presentations/p/" + presentation.getId() + "/s/" + i)
                                                     .to(ImageType.PNG)
                                                     .withSize(250, 250).file());;
@@ -61,7 +53,6 @@ public class SlideService {
                           .imageUrl(createAndSaveSlideImage( ppt.getPageSize(), xslfSlides.get(i)))
                           .build());
         }
-        slideRepository.saveAll(slides);
         return slides;
     }
 
@@ -74,14 +65,10 @@ public class SlideService {
         xslfSlide.draw(graphics);
         File tempFile = File.createTempFile("temp", ".png");
         ImageIO.write(slideImage, "png", tempFile);
-        return uploadToCloudinary(tempFile);
+        return cloudinaryService.uploadToCloudinary(tempFile);
 
     }
 
-    private String uploadToCloudinary(File qrCode) throws IOException {
-        Map uploadResult = cloudinary.uploader().upload(qrCode, ObjectUtils.emptyMap());
-        return (String) uploadResult.get("secure_url");
-    }
 
 
 }

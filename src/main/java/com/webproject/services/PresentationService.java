@@ -123,12 +123,13 @@ public class PresentationService {
     }
 
     public Presentation createPresentation(PresentationForm form, InputStream fis, Long userId) throws IOException {
+
         Presentation presentation = Presentation.builder()
                                                 .name(form.getName())
                                                 .tags(form.getTags())
                                                 .user(userRepository.getOne(userId)).build();
-        presentationRepository.save(presentation);
         presentation.setSlides(slideService.createSlides(fis, presentation));
+        presentationRepository.save(presentation);
         return presentation;
     }
 
