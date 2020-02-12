@@ -52,6 +52,7 @@
                         <div class="main-menu  d-none d-lg-block">
                             <nav>
                                 <ul id="navigation">
+                                    <li><a href="/home">Начало</a></li>
                                     <li><a href="/presentations/upload">Качи Презентации</a></li>
                                     <li><a href="/presentations">Всички Презентации</a></li>
                                     <li><a href="#" id="export-all">Изтегли всички</a></li>
