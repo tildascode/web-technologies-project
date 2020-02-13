@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import com.webproject.models.User;
+import com.webproject.services.PresentationService;
 import com.webproject.services.UserService;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -18,28 +19,28 @@ public class RegisterController {
 
 	@Autowired
 	public UserService userService;
-	
-	  @RequestMapping(value = "/register", method = RequestMethod.GET)
-	  public ModelAndView showRegister(HttpServletRequest request, HttpServletResponse response) {
-	    ModelAndView mav = new ModelAndView("register");
-	    mav.addObject("user", new User());
-	    return mav;
-	  }
-	  
-	  @RequestMapping(value = "/registerProcess", method = RequestMethod.POST)
-	  public ModelAndView addUser(HttpServletRequest request, HttpServletResponse response,
-	  @ModelAttribute("user") User user) {
-	  ModelAndView mav = null;
+
+	@RequestMapping(value = "/register", method = RequestMethod.GET)
+	public ModelAndView showRegister(HttpServletRequest request, HttpServletResponse response) {
+		ModelAndView mav = new ModelAndView("register");
+		mav.addObject("user", new User());
+		return mav;
+	}
+
+	@RequestMapping(value = "/register", method = RequestMethod.POST)
+	public ModelAndView addUser(HttpServletRequest request, HttpServletResponse response,
+			@ModelAttribute("user") User user) {
+		ModelAndView mav;
 		User u = userService.validateNewUser(user);
 		if (null != u) {
 			userService.register(user);
-			mav = new ModelAndView("home");
-			mav.addObject("userName", u.getUserName());
+			request.getSession().setAttribute("userID", u.getId());
+			mav = new ModelAndView("redirect:/home");
 		} else {
 			mav = new ModelAndView("register");
 			mav.addObject("message", "Username and password cann`t be null!");
 		}
 		return mav;
-	  }
-	  
+	}
+
 }

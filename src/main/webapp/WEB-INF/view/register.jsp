@@ -21,7 +21,7 @@
 <body background="/img/banner/1.png">
 
 	<div class="col-lg-12 col-md-12" align="center">
-		<form:form modelAttribute="user" action="registerProcess"
+		<form:form modelAttribute="user" action="register"
 			method="post">
 			<div>
 				<form:label path="userName">Username:</form:label>
