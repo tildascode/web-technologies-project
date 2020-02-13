@@ -15,33 +15,35 @@ import javax.servlet.http.HttpServletResponse;
 @Controller
 public class UserController {
 
-	@Autowired private UserService userService;
+    @Autowired
+    private UserService userService;
 
-	@RequestMapping(value = "/login", method = RequestMethod.GET)
-	public ModelAndView showLogin(HttpServletRequest request, HttpServletResponse response) {
-		ModelAndView mav = new ModelAndView("login");
-		mav.addObject("user", new User());
-		return mav;
-	}
+    @RequestMapping(value = "/login", method = RequestMethod.GET)
+    public ModelAndView showLogin() {
+        ModelAndView mav = new ModelAndView("login");
+        mav.addObject("user", new User());
+        return mav;
+    }
 
-	@RequestMapping(value = "/home", method = RequestMethod.POST)
-	public ModelAndView loginProcess(HttpServletRequest request, HttpServletResponse response,
-			@ModelAttribute("user") User user) {
-		ModelAndView mav = null;
-		User u = userService.validateUser(user);
-		if (null != u) {
-			mav = new ModelAndView("home");
-			mav.addObject("userName", u.getUserName());
-		} else {
-			mav = new ModelAndView("login");
-			mav.addObject("message", "Username or Password is wrong!!");
-		}
-		return mav;
-	}
 
-	@RequestMapping(value = "/home", method = RequestMethod.GET)
-	public String getHome(HttpServletRequest request, HttpServletResponse response,
-									 @ModelAttribute("user") User user) {
-		return "home";
-	}
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    public ModelAndView loginProcess(HttpServletRequest request,
+                                     @ModelAttribute("user") User user) {
+        ModelAndView mav;
+        User u = userService.validateUser(user);
+        if (null != u) {
+            request.getSession().setAttribute("userID", u.getId());
+            mav = new ModelAndView("redirect:/home");
+
+        } else {
+            mav = new ModelAndView("login");
+            mav.addObject("message", "Username or Password is wrong!!");
+        }
+        return mav;
+    }
+
+    @RequestMapping(value = "/home", method = RequestMethod.GET)
+    public String getHome() {
+        return "home";
+    }
 }

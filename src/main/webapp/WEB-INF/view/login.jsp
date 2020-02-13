@@ -25,7 +25,7 @@
 </head>
 <body background="/img/banner/1.png">
 	<div class="col-lg-12 col-md-12" align="center">
-		<form:form modelAttribute="user" action="home" method="post">
+		<form:form modelAttribute="user" action="login" method="post">
 			<div>
 				<form:label path="userName">Username:</form:label>
 				<form:input path="userName" name="userName" />

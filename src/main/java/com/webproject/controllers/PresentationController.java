@@ -2,6 +2,7 @@ package com.webproject.controllers;
 
 import com.webproject.models.Presentation;
 import com.webproject.services.PresentationService;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -82,7 +83,8 @@ public class PresentationController {
     }
 
     @PostMapping("/upload")
-    public String handleFileUpload(Model model, @Valid PresentationForm form, BindingResult bindingResult) {
+    public String handleFileUpload(Model model, @Valid PresentationForm form, BindingResult bindingResult,
+                                   HttpServletRequest request) {
         if (bindingResult.hasErrors()) {
             StringBuffer message = new StringBuffer();
             for (FieldError fe : bindingResult.getFieldErrors()) {
@@ -95,10 +97,14 @@ public class PresentationController {
 
             return "upload";
         }
+        if (request.getSession().getAttribute("userID") == null) {
+            return "redirect:/login";
+        }
         if (form.getZipFile().getOriginalFilename().contains(".pptx") ||
             form.getZipFile().getOriginalFilename().contains(".ppt")) {
             try {
-                presentationService.createPresentation(form, form.getZipFile().getInputStream(), 1L);
+                presentationService.createPresentation(form, form.getZipFile().getInputStream(),
+                                                       (Long) request.getSession().getAttribute("userID"));
             } catch (IOException e) {
                 model.addAttribute("message",
                                    "Неуспешно качване на презентация; Сигурни ли сте, че презентацията е с разширение .pptx или .ppt ?");

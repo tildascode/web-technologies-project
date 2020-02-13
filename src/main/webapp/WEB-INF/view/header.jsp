@@ -20,7 +20,7 @@
                     <div class="col-xl-4 col-md-4">
                         <div class="logo">
                             <c:choose>
-                                <c:when test="${request.getSession().getAttribute(user) != null}">
+                                <c:when test="${empty sessionScope.userID}">
                                     <a href="/login">
                                         <img src="/img/logo.png" width="500px" alt="">
                                     </a>
@@ -33,15 +33,14 @@
                             </c:choose>
                         </div>
                     </div>
-                    <c:if test="${request.getSession().getAttribute(user) != null}">
+                    <c:if test="${not empty sessionScope.userID}">
                         <div class="col-xl-4 col-md-4 d-none d-md-block">
                             <div class="login_resiter">
-                                <p><a href="/presentations/u/"><i
+                                <p><a href="/presentations/u/${sessionScope.userID}"><i
                                         class="flaticon-user"></i>Профил</a></p>
                             </div>
                         </div>
                     </c:if>
-
                 </div>
             </div>
         </div>
